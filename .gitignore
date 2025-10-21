@@ -1,0 +1,97 @@
+# Jetson ML Benchmark Suite - Git Ignore File
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb
+
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+
+# Results and Outputs
+*_results.json
+*.log
+*.txt.bak
+
+# TensorRT
+*.engine
+*.plan
+*.ts
+*.onnx
+*.trt
+
+# Model Files
+*.pth
+*.pt
+*.h5
+*.pb
+*.ckpt
+
+# Temporary Files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# OS Files
+.DS_Store
+Thumbs.db
+.directory
+
+# Large Data Files
+*.mp4
+*.avi
+*.mkv
+*.jpg
+*.jpeg
+*.png
+*.gif
+data/
+datasets/
+
+# Compiled
+*.o
+*.a
+*.so
+*.dylib
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Exceptions - Keep these files
+!jetson_benchmark_results.json
+!jetson_test_suite_results.json
+
