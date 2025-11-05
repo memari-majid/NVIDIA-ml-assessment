@@ -335,7 +335,7 @@ class JetsonMLBenchmark:
         with open('gb10_ml_benchmark_results.json', 'w') as f:
             json.dump(self.results, f, indent=2, default=str)
         
-        print(f"\nDetailed results saved to: jetson_ml_benchmark_results.json")
+        print(f"\nDetailed results saved to: gb10_ml_benchmark_results.json")
     
     def create_visualizations(self):
         """Create performance visualization charts"""
