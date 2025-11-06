@@ -231,8 +231,7 @@ def create_login_interface():
                 status_msg = gr.Markdown("")
                 
                 gr.Markdown("---")
-                gr.Markdown("**Demo Accounts:**")
-                gr.Markdown("Student: `student` / `student123` | Admin: `admin` / `admin`")
+                gr.Markdown("**Demo Account:** username: `student` password: `student123`")
                 
                 gr.Markdown("""
                 <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #275D38;">
