@@ -46,15 +46,25 @@ def init_db():
     ''')
     conn.commit()
     
-    # Create demo accounts
+    # Create demo accounts with roles
     try:
-        cursor.execute("INSERT INTO users (username, password_hash) VALUES (?, ?)", 
-                      ("student", hashlib.sha256("student123".encode()).hexdigest()))
-        cursor.execute("INSERT INTO users (username, password_hash) VALUES (?, ?)", 
-                      ("admin", hashlib.sha256("admin123".encode()).hexdigest()))
+        cursor.execute("""
+            INSERT INTO users (username, password_hash, email, full_name, role) 
+            VALUES (?, ?, ?, ?, ?)
+        """, ("student", hashlib.sha256("student123".encode()).hexdigest(), 
+              "student@uvu.edu", "Demo Student", "student"))
+        
+        cursor.execute("""
+            INSERT INTO users (username, password_hash, email, full_name, role) 
+            VALUES (?, ?, ?, ?, ?)
+        """, ("admin", hashlib.sha256("admin".encode()).hexdigest(), 
+              "admin@uvu.edu", "Administrator", "admin"))
+        
         conn.commit()
+        print("✅ Demo accounts created (student/student123, admin/admin)")
     except:
-        pass  # Already exists
+        print("ℹ️  Demo accounts already exist")
+        pass
     
     return conn
 
