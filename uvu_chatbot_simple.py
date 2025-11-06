@@ -51,9 +51,11 @@ def init_db():
         cursor.execute("INSERT INTO users (username, password_hash) VALUES (?, ?)", 
                       ("student", hashlib.sha256("student123".encode()).hexdigest()))
         cursor.execute("INSERT INTO users (username, password_hash) VALUES (?, ?)", 
-                      ("admin", hashlib.sha256("admin123".encode()).hexdigest()))
+                      ("admin", hashlib.sha256("admin".encode()).hexdigest()))  # Admin password is just "admin"
         conn.commit()
+        print("✅ Demo accounts created: student/student123, admin/admin")
     except:
+        print("ℹ️  Demo accounts already exist")
         pass  # Already exists
     
     return conn
@@ -61,11 +63,9 @@ def init_db():
 conn = init_db()
 print("✅ Database initialized")
 
-# Load model (using ungated model that works immediately)
+# Load model
 print("🔄 Loading AI model...")
-MODEL_NAME = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"  # Ungated model - works without special access
-print(f"   Model: {MODEL_NAME}")
-print("   Note: To use Llama-3.2, request access at https://huggingface.co/meta-llama/Llama-3.2-1B-Instruct")
+MODEL_NAME = "meta-llama/Llama-3.2-1B-Instruct"
 
 try:
     tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, token=HF_TOKEN)
