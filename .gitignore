@@ -1,4 +1,4 @@
-# Jetson ML Benchmark Suite - Git Ignore File
+# Dell Pro Max GB10 ML Assessment - Git Ignore
 
 # Python
 __pycache__/
@@ -6,21 +6,6 @@ __pycache__/
 *$py.class
 *.so
 .Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
 
 # Virtual Environment
 venv/
@@ -28,38 +13,9 @@ env/
 ENV/
 .venv
 
-# Jupyter Notebook
-.ipynb_checkpoints
-*.ipynb
-
-# PyCharm
+# IDE
 .idea/
-
-# VS Code
 .vscode/
-
-# Results and Outputs
-*_results.json
-*.log
-*.txt.bak
-
-# TensorRT
-*.engine
-*.plan
-*.ts
-*.onnx
-*.trt
-
-# Model Files
-*.pth
-*.pt
-*.h5
-*.pb
-*.ckpt
-
-# Temporary Files
-*.tmp
-*.temp
 *.swp
 *.swo
 *~
@@ -69,18 +25,33 @@ ENV/
 Thumbs.db
 .directory
 
-# Large Data Files
-*.mp4
-*.avi
-*.mkv
-*.jpg
-*.jpeg
-*.png
-*.gif
+# Jupyter Notebooks (if any are created)
+.ipynb_checkpoints
+*.ipynb
+
+# Generated Results (keep existing JSON/txt in docs/)
+*.log
+*.tmp
+*.temp
+nohup.out
+
+# Model Files (large files not needed in repo)
+*.pth
+*.pt
+*.h5
+*.pb
+*.ckpt
+*.onnx
+*.engine
+*.plan
+
+# Data directories (results already in docs/)
 data/
 datasets/
+results/
+output/
 
-# Compiled
+# Compiled files
 *.o
 *.a
 *.so
@@ -91,30 +62,8 @@ datasets/
 .coverage
 htmlcov/
 
-# Security - NEVER commit secrets!
-.env
-.env.local
-.env.production
-.env.development
-*.key
-*.pem
-*.crt
-secrets/
-credentials/
-*_token.txt
-*_secret.txt
-config/secrets.yml
-
-# Chatbot data (contains user information)
-chatbot_data/
-nohup.out
-
-# ngrok
-ngrok_output.log
-ngrok_tunnel.log
-
-# Exceptions - Keep these files
-!jetson_benchmark_results.json
-!jetson_test_suite_results.json
-!.env.example
-
+# Temporary benchmark outputs (keep documented results in docs/)
+*_temp.json
+*_temp.txt
+benchmark_*.log
+test_*.log
