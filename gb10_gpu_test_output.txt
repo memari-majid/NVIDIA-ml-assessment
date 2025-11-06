@@ -1,0 +1,92 @@
+/home/majid/Downloads/jetson-ml-assessment/venv/lib/python3.12/site-packages/torch/cuda/__init__.py:283: UserWarning: 
+    Found GPU0 NVIDIA GB10 which is of cuda capability 12.1.
+    Minimum and Maximum cuda capability supported by this version of PyTorch is
+    (8.0) - (12.0)
+    
+  warnings.warn(
+/home/majid/Downloads/jetson-ml-assessment/venv/lib/python3.12/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/home/majid/Downloads/jetson-ml-assessment/venv/lib/python3.12/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=None`.
+  warnings.warn(msg)
+Starting NVIDIA Jetson Orin Nano ML Benchmark...
+System Info: {'timestamp': '2025-11-06T00:04:32.115474', 'python_version': '3.12.3 (main, Aug 14 2025, 17:47:21) [GCC 13.3.0]', 'pytorch_version': '2.9.0+cu129', 'cpu_count': 20, 'memory_total': 119.63694381713867, 'memory_available': 113.70578002929688, 'cuda_available': True, 'gpu_count': 1, 'gpu_name': 'NVIDIA GB10', 'cuda_version': '12.9'}
+Running PyTorch CPU benchmarks...
+  Testing resnet18...
+  Testing resnet50...
+  Testing mobilenet_v2...
+Running matrix operation benchmarks...
+  Testing 100x100 matrices...
+  Testing 500x500 matrices...
+  Testing 1000x1000 matrices...
+  Testing 2000x2000 matrices...
+Running tensor operation benchmarks...
+  Testing conv2d...
+  Testing maxpool2d...
+  Testing relu...
+  Testing batch_norm...
+Monitoring system resources...
+
+============================================================
+NVIDIA JETSON ORIN NANO ML BENCHMARK REPORT
+============================================================
+
+System Information:
+  Model: Jetson Orin Nano
+  CPU Cores: 20
+  Total Memory: 119.6 GB
+  Available Memory: 113.7 GB
+  CUDA Available: True
+  PyTorch Version: 2.9.0+cu129
+
+PyTorch Model Performance (CPU):
+  resnet18:
+    Inference Time: 82.54 ± 14.08 ms
+    Throughput: 48.46 FPS
+    Model Parameters: 11,689,512
+    Model Size: 44.59 MB
+  resnet50:
+    Inference Time: 214.62 ± 22.91 ms
+    Throughput: 18.64 FPS
+    Model Parameters: 25,557,032
+    Model Size: 97.49 MB
+  mobilenet_v2:
+    Inference Time: 90.23 ± 28.31 ms
+    Throughput: 44.33 FPS
+    Model Parameters: 3,504,872
+    Model Size: 13.37 MB
+
+Matrix Operation Performance:
+  matrix_100x100:
+    Time: 0.50 ms
+    Performance: 4.00 GFLOPS
+  matrix_500x500:
+    Time: 0.47 ms
+    Performance: 531.03 GFLOPS
+  matrix_1000x1000:
+    Time: 2.91 ms
+    Performance: 686.75 GFLOPS
+  matrix_2000x2000:
+    Time: 20.60 ms
+    Performance: 776.69 GFLOPS
+
+Tensor Operation Performance:
+  conv2d:
+    Time: 89.14 ± 3.98 ms
+  maxpool2d:
+    Time: 15.09 ± 1.51 ms
+  relu:
+    Time: 14.23 ± 2.85 ms
+  batch_norm:
+    Time: 18.01 ± 2.56 ms
+
+System Resource Usage:
+  Average CPU Usage: 0.2%
+  Peak CPU Usage: 1.8%
+  Average Memory Usage: 5.1%
+  Peak Memory Usage: 5.2%
+
+Total Benchmark Time: 27.6 seconds
+
+Detailed results saved to: gb10_benchmark_results.json
+
+Benchmark completed successfully!

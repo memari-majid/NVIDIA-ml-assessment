@@ -1,0 +1,114 @@
+/home/majid/Downloads/jetson-ml-assessment/venv/lib/python3.12/site-packages/torch/cuda/__init__.py:283: UserWarning: 
+    Found GPU0 NVIDIA GB10 which is of cuda capability 12.1.
+    Minimum and Maximum cuda capability supported by this version of PyTorch is
+    (8.0) - (12.0)
+    
+  warnings.warn(
+/home/majid/Downloads/jetson-ml-assessment/venv/lib/python3.12/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/home/majid/Downloads/jetson-ml-assessment/venv/lib/python3.12/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=None`.
+  warnings.warn(msg)
+Starting NVIDIA Jetson Orin Nano GPU Benchmark...
+GPU: NVIDIA GB10
+CUDA Version: 12.9
+Running PyTorch GPU benchmarks...
+  Testing resnet18...
+    Batch size: 1
+    Batch size: 4
+    Batch size: 8
+    Batch size: 16
+  Testing resnet50...
+    Batch size: 1
+    Batch size: 4
+    Batch size: 8
+    Batch size: 16
+  Testing mobilenet_v2...
+    Batch size: 1
+    Batch size: 4
+    Batch size: 8
+    Batch size: 16
+Running mixed precision (FP16) benchmarks...
+  Testing FP32...
+  Testing FP16...
+Running GPU memory benchmarks...
+  Testing resnet18...
+  Testing resnet50...
+  Testing mobilenet_v2...
+Running CUDA tensor operation benchmarks...
+  Testing matrix multiplication...
+  Testing convolution...
+Monitoring GPU utilization...
+
+============================================================
+NVIDIA JETSON ORIN NANO GPU BENCHMARK REPORT
+============================================================
+
+GPU Information:
+  GPU: NVIDIA GB10
+  CUDA Version: 12.9
+  GPU Memory: 119.64 GB
+  PyTorch Version: 2.9.0+cu129
+
+PyTorch GPU Performance:
+  resnet18:
+    Batch 1:
+      Throughput: 203.93 FPS
+      Latency: 4.90 ms
+    Batch 4:
+      Throughput: 623.59 FPS
+      Latency: 1.60 ms
+    Batch 8:
+      Throughput: 931.85 FPS
+      Latency: 1.07 ms
+    Batch 16:
+      Throughput: 1389.32 FPS
+      Latency: 0.72 ms
+  resnet50:
+    Batch 1:
+      Throughput: 163.65 FPS
+      Latency: 6.11 ms
+    Batch 4:
+      Throughput: 399.54 FPS
+      Latency: 2.50 ms
+    Batch 8:
+      Throughput: 486.20 FPS
+      Latency: 2.06 ms
+    Batch 16:
+      Throughput: 565.76 FPS
+      Latency: 1.77 ms
+  mobilenet_v2:
+    Batch 1:
+      Throughput: 445.31 FPS
+      Latency: 2.25 ms
+    Batch 4:
+      Throughput: 1536.95 FPS
+      Latency: 0.65 ms
+    Batch 8:
+      Throughput: 1573.58 FPS
+      Latency: 0.64 ms
+    Batch 16:
+      Throughput: 1537.98 FPS
+      Latency: 0.65 ms
+
+Mixed Precision Performance:
+  FP32 Throughput: 471.76 FPS
+  FP16 Throughput: 703.37 FPS
+  FP16 Speedup: 1.49x
+
+GPU Memory Usage:
+  resnet18: 108.96 MB
+  resnet50: 235.79 MB
+  mobilenet_v2: 250.64 MB
+
+CUDA Operations Performance:
+  matmul_100x100: 12.41 GFLOPS
+  matmul_500x500: 1500.11 GFLOPS
+  matmul_1000x1000: 2661.87 GFLOPS
+  matmul_2000x2000: 8069.56 GFLOPS
+  matmul_4000x4000: 13392.48 GFLOPS
+
+Total Benchmark Time: 32.2 seconds
+
+Detailed results saved to: gb10_gpu_benchmark_results.json
+
+✅ GPU Benchmark completed successfully!
