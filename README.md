@@ -12,75 +12,12 @@
 
 ---
 
-## 📁 Repository Structure
-
-```
-jetson-ml-assessment/
-├── 📂 scripts/                   # Benchmark scripts (7 files)
-│   ├── jetson_verify.py          # System verification
-│   ├── jetson_simple_benchmark.py # CPU benchmarks
-│   ├── jetson_gpu_benchmark.py   # GPU benchmarks
-│   ├── jetson_ml_benchmark.py    # ML model inference
-│   ├── run_all_tests.py          # Automated test runner
-│   ├── compare_results.py        # Results comparison
-│   └── performance_comparison.py # Performance analysis
-│
-├── 📂 docs/                      # Assessment documentation (15 files)
-│   ├── GB10_ASSESSMENT_INDEX.md  # Main assessment index
-│   ├── GB10_EXECUTIVE_SUMMARY.txt # Executive summary
-│   ├── GB10_vs_JETSON_COMPARISON.md # Detailed comparison
-│   ├── GB10_CAPABILITIES_GUIDE.md # What GB10 can run
-│   ├── GB10_GPU_RESULTS.md       # GPU benchmark results
-│   ├── GB10_COMPLETE_TEST_RESULTS.md # Full test results
-│   ├── GB10_QUICK_START.md       # Quick start guide
-│   ├── GB10_WHAT_YOU_CAN_RUN.txt # Model compatibility
-│   ├── NVIDIA_Jetson_Orin_Nano_ML_Comprehensive_Report.md
-│   ├── system_info.txt           # System specifications
-│   └── *.txt                     # Raw benchmark outputs
-│
-├── 📂 venv/                      # Python virtual environment
-└── 📄 README.md                  # This file
-```
-
 **Repository Contents:**
 - 🐍 **7 Python benchmark scripts**
 - 📚 **15 assessment documentation files**
 - 📊 **Benchmark data and results**
 - ✅ **Complete assessment report**
 
----
-
-## 🚀 Quick Start
-
-### Prerequisites
-
-```bash
-# Python 3.8+ with CUDA support
-python3 --version
-
-# Check GPU availability
-nvidia-smi
-```
-
-### Run Benchmarks
-
-```bash
-# Navigate to repository
-cd /home/majid/Downloads/jetson-ml-assessment
-
-# Activate virtual environment (if using)
-source venv/bin/activate
-
-# Run system verification
-cd scripts
-python3 jetson_verify.py
-
-# Run complete benchmark suite
-python3 run_all_tests.py
-
-# Compare results
-python3 compare_results.py
-```
 
 ---
 
@@ -122,86 +59,6 @@ python3 compare_results.py
 - 150-200 concurrent users
 - Real-time inference
 - Full model hosting
-
----
-
-## 📖 Assessment Documentation
-
-### Key Documents
-
-1. **[GB10_ASSESSMENT_INDEX.md](docs/GB10_ASSESSMENT_INDEX.md)**  
-   Main index with links to all assessment documents
-
-2. **[GB10_EXECUTIVE_SUMMARY.txt](docs/GB10_EXECUTIVE_SUMMARY.txt)**  
-   High-level summary for decision makers
-
-3. **[GB10_vs_JETSON_COMPARISON.md](docs/GB10_vs_JETSON_COMPARISON.md)**  
-   Detailed performance comparison with benchmarks
-
-4. **[GB10_CAPABILITIES_GUIDE.md](docs/GB10_CAPABILITIES_GUIDE.md)**  
-   Comprehensive guide to GB10 capabilities
-
-5. **[GB10_GPU_RESULTS.md](docs/GB10_GPU_RESULTS.md)**  
-   Detailed GPU benchmark results
-
-6. **[GB10_COMPLETE_TEST_RESULTS.md](docs/GB10_COMPLETE_TEST_RESULTS.md)**  
-   Complete test suite results
-
-### Raw Data Files
-
-- `gb10_all_tests_output.txt` - Complete test output
-- `gb10_complete_ml_benchmark.txt` - ML benchmark data
-- `gb10_gpu_benchmark_output.txt` - GPU benchmark output
-- `gb10_gpu_test_output.txt` - GPU test results
-- `complete_comparison_output.txt` - Comparison data
-- `system_info.txt` - System specifications
-
----
-
-## 🔬 Benchmark Scripts
-
-### Available Scripts
-
-| Script | Purpose |
-|--------|---------|
-| `jetson_verify.py` | Verify system configuration and GPU |
-| `jetson_simple_benchmark.py` | CPU performance benchmarks |
-| `jetson_gpu_benchmark.py` | GPU performance benchmarks |
-| `jetson_ml_benchmark.py` | ML model inference benchmarks |
-| `run_all_tests.py` | Run complete test suite |
-| `compare_results.py` | Compare benchmark results |
-| `performance_comparison.py` | Generate comparison reports |
-
-### Running Individual Benchmarks
-
-```bash
-cd scripts
-
-# System verification
-python3 jetson_verify.py
-
-# CPU benchmarks
-python3 jetson_simple_benchmark.py
-
-# GPU benchmarks (requires CUDA)
-python3 jetson_gpu_benchmark.py
-
-# ML model benchmarks
-python3 jetson_ml_benchmark.py
-```
-
-### Running Complete Assessment
-
-```bash
-cd scripts
-
-# Run all tests (includes CPU, GPU, ML)
-python3 run_all_tests.py
-
-# Optional flags:
-python3 run_all_tests.py --skip-gpu    # Skip GPU tests
-python3 run_all_tests.py --quick       # Quick mode
-```
 
 ---
 
@@ -274,19 +131,6 @@ All benchmark results are included in the `docs/` directory:
 - **Comparisons:** Side-by-side GB10 vs Jetson analysis
 - **System Info:** Hardware specifications and configuration
 
-To view results:
-
-```bash
-# View executive summary
-cat docs/GB10_EXECUTIVE_SUMMARY.txt
-
-# View detailed comparison
-cat docs/GB10_vs_JETSON_COMPARISON.md
-
-# View complete test results
-cat docs/GB10_COMPLETE_TEST_RESULTS.md
-```
-
 ---
 
 ## 🔧 Technical Details
@@ -353,16 +197,6 @@ See virtual environment for complete dependencies.
 
 ---
 
-## 📞 Support
-
-For questions about this assessment:
-
-1. Review documentation in `docs/` directory
-2. Check `GB10_ASSESSMENT_INDEX.md` for complete file index
-3. Review `GB10_QUICK_START.md` for getting started
-4. Contact your system administrator
-
----
 
 ## 📄 License & Attribution
 
