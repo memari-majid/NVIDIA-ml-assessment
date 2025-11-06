@@ -15,10 +15,9 @@ from pathlib import Path
 import warnings
 warnings.filterwarnings('ignore')
 
-# Get tokens from environment
-HF_TOKEN = os.environ.get('HF_TOKEN', None)
-if not HF_TOKEN:
-    print("⚠️  Set HF_TOKEN environment variable for model access")
+# Tokens (Private repo - safe to include, but don't push to public GitHub!)
+HF_TOKEN = os.environ.get('HF_TOKEN', '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')
+print("✅ HuggingFace token configured")
 
 # Simple config
 DATA_DIR = Path("chatbot_data")
@@ -49,13 +48,13 @@ def init_db():
     
     # Create demo accounts
     try:
-        cursor.execute("INSERT INTO users VALUES (?, ?, CURRENT_TIMESTAMP)", 
+        cursor.execute("INSERT INTO users (username, password_hash) VALUES (?, ?)", 
                       ("student", hashlib.sha256("student123".encode()).hexdigest()))
-        cursor.execute("INSERT INTO users VALUES (?, ?, CURRENT_TIMESTAMP)", 
+        cursor.execute("INSERT INTO users (username, password_hash) VALUES (?, ?)", 
                       ("admin", hashlib.sha256("admin123".encode()).hexdigest()))
         conn.commit()
     except:
-        pass
+        pass  # Already exists
     
     return conn
 
@@ -153,17 +152,54 @@ theme = gr.themes.Soft(
     button_primary_text_color='white',
 )
 
-# CSS for ChatGPT-like appearance
+# CSS for ChatGPT-like appearance with centered login
 custom_css = """
-.container {
-    max-width: 900px !important;
-    margin: auto !important;
+/* Center everything */
+.gradio-container {
+    max-width: 1200px !important;
+    margin: 0 auto !important;
 }
+
+/* Login page centering */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 70vh;
+}
+
+/* Chat container */
 .chat-container {
-    height: 600px !important;
+    max-width: 900px;
+    margin: 0 auto;
 }
+
+/* Message bubbles */
 .message-wrap {
-    padding: 20px !important;
+    padding: 15px 20px !important;
+}
+
+/* Center login form */
+.contain {
+    max-width: 500px !important;
+    margin: 0 auto !important;
+}
+
+/* Header styling */
+.header-text {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+/* Smooth transitions */
+* {
+    transition: all 0.3s ease;
+}
+
+/* Better button styling */
+button[type="submit"] {
+    padding: 12px 24px !important;
+    font-size: 1.05em !important;
 }
 """
 
@@ -299,53 +335,75 @@ def create_chat_interface(username):
 with gr.Blocks(theme=theme, title="UVU AI Chatbot") as demo:
     user_state = gr.State(None)
     
-    # Login screen
+    # Login screen - Centered and clean
     with gr.Group(visible=True) as login_group:
+        # Spacer for vertical centering
+        gr.HTML("<div style='height: 10vh;'></div>")
+        
+        # Centered header
         gr.HTML("""
-        <div style="text-align: center; padding: 50px 20px 40px 20px; background: linear-gradient(135deg, #275D38 0%, #1a4428 100%); color: white; border-radius: 15px; margin-bottom: 40px;">
-            <h1 style="margin: 0; font-size: 3em; font-weight: 600;">🎓 UVU AI</h1>
-            <p style="margin: 15px 0 5px 0; font-size: 1.2em;">Chat with State-of-the-Art AI</p>
-            <p style="margin: 5px 0 0 0; font-size: 0.9em; opacity: 0.9;">Utah Valley University</p>
+        <div style="text-align: center; padding: 60px 20px; background: linear-gradient(135deg, #275D38 0%, #1a4428 100%); color: white; border-radius: 20px; margin: 0 auto 50px auto; max-width: 600px; box-shadow: 0 10px 40px rgba(39,93,56,0.3);">
+            <div style="font-size: 4em; margin-bottom: 15px;">🎓</div>
+            <h1 style="margin: 0; font-size: 2.8em; font-weight: 700; letter-spacing: -0.5px;">UVU AI</h1>
+            <p style="margin: 20px 0 8px 0; font-size: 1.15em; opacity: 0.95;">Chat with State-of-the-Art AI</p>
+            <p style="margin: 0; font-size: 0.95em; opacity: 0.85;">Utah Valley University</p>
         </div>
         """)
         
+        # Centered login form
         with gr.Row():
             with gr.Column(scale=1):
-                pass
+                pass  # Left spacer
             
-            with gr.Column(scale=2):
+            with gr.Column(scale=3):
+                # Clean login box
+                gr.HTML("""
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <h2 style="margin: 0 0 10px 0; font-size: 1.8em; font-weight: 600;">Welcome</h2>
+                    <p style="margin: 0; color: #666; font-size: 1.05em;">Sign in to start chatting</p>
+                </div>
+                """)
+                
                 with gr.Group():
-                    gr.Markdown("## Welcome Back")
-                    gr.Markdown("Sign in to continue to UVU AI Chat")
-                    
                     login_username = gr.Textbox(
-                        label="Username",
-                        placeholder="Enter your username",
-                        container=True
+                        label="",
+                        placeholder="Username",
+                        container=False,
+                        elem_classes="login-input"
                     )
                     login_password = gr.Textbox(
-                        label="Password",
+                        label="",
                         type="password",
-                        placeholder="Enter your password",
-                        container=True
+                        placeholder="Password",
+                        container=False,
+                        elem_classes="login-input"
                     )
                     
-                    login_btn = gr.Button("Continue →", variant="primary", size="lg", scale=1)
-                    login_status = gr.Markdown("")
+                    login_btn = gr.Button(
+                        "Continue →", 
+                        variant="primary", 
+                        size="lg", 
+                        elem_id="login-btn",
+                        scale=1
+                    )
                     
-                    gr.Markdown("---")
-                    gr.Markdown("**Demo Account**")
-                    gr.Markdown("Username: `student` | Password: `student123`")
-                    
-                    gr.Markdown("""
-                    <div style="margin-top: 25px; padding: 15px; background: #f0f7f4; border-radius: 8px; border-left: 4px solid #275D38;">
-                        <p style="margin: 0; font-size: 0.9em;"><strong>New to UVU AI?</strong></p>
-                        <p style="margin: 8px 0 0 0; font-size: 0.85em;">Use the demo account above or contact your instructor for access.</p>
-                    </div>
-                    """)
+                    login_status = gr.Markdown("", elem_classes="status-message")
+                
+                # Demo account info
+                gr.HTML("""
+                <div style="text-align: center; margin-top: 35px; padding: 25px; background: linear-gradient(135deg, #f8faf9 0%, #f0f7f4 100%); border-radius: 12px; border: 1px solid #e0ebe5;">
+                    <p style="margin: 0 0 12px 0; font-weight: 600; color: #275D38; font-size: 1.05em;">📚 Demo Account</p>
+                    <p style="margin: 0; color: #555; font-size: 0.95em;">
+                        Username: <code style="background: white; padding: 3px 8px; border-radius: 4px; font-weight: 600;">student</code> 
+                        &nbsp;•&nbsp; 
+                        Password: <code style="background: white; padding: 3px 8px; border-radius: 4px; font-weight: 600;">student123</code>
+                    </p>
+                    <p style="margin: 15px 0 0 0; color: #666; font-size: 0.85em;">New users: contact your instructor for access</p>
+                </div>
+                """)
             
             with gr.Column(scale=1):
-                pass
+                pass  # Right spacer
     
     # Chat screen (hidden initially)
     with gr.Group(visible=False) as chat_group:
