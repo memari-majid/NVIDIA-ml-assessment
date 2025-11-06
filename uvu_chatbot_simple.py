@@ -108,6 +108,12 @@ AVAILABLE_MODELS = {
         "size": "7B params, ~14GB",
         "speed": "2,000+ tokens/sec",
         "access": "⚠️ Requires HF approval"
+    },
+    "GPT-OSS-Safeguard-20B (OpenAI)": {
+        "name": "openai/gpt-oss-safeguard-20b",
+        "size": "20B params, ~40GB",
+        "speed": "800-1,000 tokens/sec",
+        "access": "✅ No approval needed"
     }
 }
 
