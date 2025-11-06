@@ -38,10 +38,24 @@ def init_db():
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS conversations (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            conversation_id TEXT NOT NULL,
             username TEXT NOT NULL,
             message TEXT NOT NULL,
             response TEXT NOT NULL,
+            model_used TEXT,
             timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    ''')
+    
+    # Chat sessions table - for sidebar history like ChatGPT
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS chat_sessions (
+            conversation_id TEXT PRIMARY KEY,
+            username TEXT NOT NULL,
+            title TEXT NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            message_count INTEGER DEFAULT 0
         )
     ''')
     conn.commit()
@@ -202,8 +216,64 @@ def load_model(model_display_name):
             return f"⚠️ {model_display_name} requires HuggingFace access approval.\n\nVisit: https://huggingface.co/{model_name}\nClick 'Agree and access repository'\n\nUsing current model instead."
         return f"❌ Error loading {model_display_name}: {error_msg}"
 
-# Chat function with selected model support
-def chat_response(message, history, username, selected_model_name):
+# Chat management functions (ChatGPT-like)
+def create_new_chat(username):
+    """Create a new chat session"""
+    import uuid
+    conversation_id = str(uuid.uuid4())[:8]
+    cursor = conn.cursor()
+    cursor.execute("""
+        INSERT INTO chat_sessions (conversation_id, username, title, message_count)
+        VALUES (?, ?, ?, 0)
+    """, (conversation_id, username, "New Chat"))
+    conn.commit()
+    return conversation_id
+
+def get_user_chats(username):
+    """Get all chat sessions for sidebar (ChatGPT-like)"""
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT conversation_id, title, updated_at, message_count
+        FROM chat_sessions
+        WHERE username = ?
+        ORDER BY updated_at DESC
+        LIMIT 50
+    """, (username,))
+    return cursor.fetchall()
+
+def load_chat_history(conversation_id):
+    """Load messages from a specific chat"""
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT message, response
+        FROM conversations
+        WHERE conversation_id = ?
+        ORDER BY timestamp ASC
+    """, (conversation_id,))
+    messages = cursor.fetchall()
+    return [[msg, resp] for msg, resp in messages]
+
+def update_chat_title(conversation_id, first_message):
+    """Auto-generate chat title from first message (like ChatGPT)"""
+    title = first_message[:50] + "..." if len(first_message) > 50 else first_message
+    cursor = conn.cursor()
+    cursor.execute("""
+        UPDATE chat_sessions
+        SET title = ?, updated_at = CURRENT_TIMESTAMP
+        WHERE conversation_id = ?
+    """, (title, conversation_id))
+    conn.commit()
+
+def delete_chat(conversation_id):
+    """Delete a chat session"""
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM conversations WHERE conversation_id = ?", (conversation_id,))
+    cursor.execute("DELETE FROM chat_sessions WHERE conversation_id = ?", (conversation_id,))
+    conn.commit()
+    return "✅ Chat deleted"
+
+# Chat function with conversation management
+def chat_response(message, history, username, selected_model_name, conversation_id):
     if not MODEL_LOADED or model is None:
         return history + [[message, "⚠️ No model loaded. Please select a model from the dropdown above or contact administrator."]]
     
@@ -232,10 +302,25 @@ def chat_response(message, history, username, selected_model_name):
     if "Assistant:" in response:
         response = response.split("Assistant:")[-1].strip()
     
-    # Save to database with model info
+    # Save to database
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO conversations (username, message, response) VALUES (?, ?, ?)",
-                  (username, message, f"[{selected_model_name}] {response}"))
+    cursor.execute("""
+        INSERT INTO conversations (conversation_id, username, message, response, model_used)
+        VALUES (?, ?, ?, ?, ?)
+    """, (conversation_id, username, message, response, selected_model_name))
+    
+    # Update session
+    cursor.execute("""
+        UPDATE chat_sessions
+        SET updated_at = CURRENT_TIMESTAMP,
+            message_count = message_count + 1
+        WHERE conversation_id = ?
+    """, (conversation_id,))
+    
+    # Auto-generate title from first message
+    if len(history) == 0:
+        update_chat_title(conversation_id, message)
+    
     conn.commit()
     
     return history + [[message, response]]
@@ -503,21 +588,59 @@ with gr.Blocks(theme=theme, title="UVU AI Chatbot") as demo:
             with gr.Column(scale=1):
                 pass  # Right spacer
     
-    # Chat screen (hidden initially)
+    # Chat screen with ChatGPT-like sidebar (hidden initially)
     with gr.Group(visible=False) as chat_group:
-        # Minimal header
+        # Header
         with gr.Row():
             gr.HTML("""
             <div style="padding: 12px 20px; background: #275D38; color: white; border-radius: 8px;">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <div>
                         <span style="font-size: 1.3em; font-weight: 600;">💬 UVU AI Chat</span>
-                        <span id="username-display" style="margin-left: 15px; opacity: 0.8; font-size: 0.9em;"></span>
                     </div>
                 </div>
             </div>
             """)
             logout_btn = gr.Button("Sign Out", size="sm", scale=0)
+        
+        # Main content with sidebar (ChatGPT style)
+        with gr.Row():
+            # Sidebar - Chat history (ChatGPT-like)
+            with gr.Column(scale=2, min_width=250):
+                gr.HTML("""
+                <div style="padding: 15px 10px; background: #f7f9f8; border-radius: 8px; margin-bottom: 10px;">
+                    <h3 style="margin: 0 0 5px 0; font-size: 0.95em; color: #275D38;">💬 Your Chats</h3>
+                </div>
+                """)
+                
+                new_chat_btn = gr.Button(
+                    "➕ New Chat",
+                    variant="primary",
+                    size="sm",
+                    elem_id="new-chat-btn"
+                )
+                
+                # Chat history list
+                chat_history_list = gr.Radio(
+                    choices=[],
+                    label="Recent Conversations",
+                    interactive=True,
+                    elem_id="chat-list"
+                )
+                
+                refresh_chats_btn = gr.Button("🔄 Refresh", size="sm", variant="secondary")
+                
+                gr.HTML("""
+                <div style="margin-top: 15px; padding: 12px; background: #f0f7f4; border-radius: 6px; font-size: 0.85em;">
+                    <p style="margin: 0; color: #275D38; font-weight: 600;">💡 Tip</p>
+                    <p style="margin: 5px 0 0 0; color: #555;">Click "New Chat" to start fresh, or select a previous conversation to continue.</p>
+                </div>
+                """)
+            
+            # Main chat area
+            with gr.Column(scale=10):
+                # Current conversation ID (hidden)
+                current_conversation_id = gr.State(None)
         
         # Model selector - compact and clean
         with gr.Row():
@@ -572,19 +695,30 @@ with gr.Blocks(theme=theme, title="UVU AI Chatbot") as demo:
     # Login logic
     def do_login(username, password):
         if authenticate(username, password):
+            # Create initial chat session
+            conversation_id = create_new_chat(username)
+            
+            # Get user's chat history for sidebar
+            chats = get_user_chats(username)
+            chat_choices = {f"{title} ({msg_count} msgs)": conv_id for conv_id, title, _, msg_count in chats}
+            
             return (
                 gr.update(visible=False),  # Hide login
                 gr.update(visible=True),   # Show chat
                 username,                   # Store username
                 f"Welcome, {username}!",
-                []                          # Empty chat history
+                [],                         # Empty chat history
+                conversation_id,            # Current conversation ID
+                gr.update(choices=list(chat_choices.keys()), value=None)  # Populate sidebar
             )
         return (
             gr.update(visible=True),       # Keep login visible
             gr.update(visible=False),      # Keep chat hidden
             None,
             "❌ **Invalid credentials**\n\nPlease try again or use demo: student / student123",
-            []
+            [],
+            None,
+            gr.update()
         )
     
     # Logout logic
@@ -594,16 +728,49 @@ with gr.Blocks(theme=theme, title="UVU AI Chatbot") as demo:
             gr.update(visible=False),  # Hide chat
             None,                       # Clear username
             "",                         # Clear status
-            []                          # Clear chat
+            [],                         # Clear chat
+            None,                       # Clear conversation_id
+            gr.update(choices=[])       # Clear chat list
         )
     
-    # Model selection logic
-    def on_model_change(selected_model):
-        """Update model info when selection changes"""
-        model_info_obj = AVAILABLE_MODELS[selected_model]
-        info_text = f"**{selected_model}:** {model_info_obj['size']} • {model_info_obj['speed']} • {model_info_obj['access']}"
-        return info_text
+    # Chat management logic (ChatGPT-like)
+    def handle_new_chat(username):
+        """Create new chat and refresh sidebar"""
+        conversation_id = create_new_chat(username)
+        
+        # Get updated chat list
+        chats = get_user_chats(username)
+        chat_choices = [f"{title} ({msg_count} msgs)" for _, title, _, msg_count in chats]
+        
+        return (
+            [],  # Clear chat history
+            conversation_id,  # New conversation ID
+            gr.update(choices=chat_choices, value=None)  # Update sidebar
+        )
     
+    def handle_load_chat(username, selected_chat_label):
+        """Load selected chat from sidebar"""
+        if not selected_chat_label:
+            return [], None
+        
+        # Parse conversation_id from label
+        chats = get_user_chats(username)
+        chat_map = {f"{title} ({msg_count} msgs)": conv_id for conv_id, title, _, msg_count in chats}
+        
+        if selected_chat_label in chat_map:
+            conversation_id = chat_map[selected_chat_label]
+            history = load_chat_history(conversation_id)
+            return history, conversation_id
+        
+        return [], None
+    
+    def handle_refresh_chats(username):
+        """Refresh chat sidebar"""
+        chats = get_user_chats(username)
+        chat_choices = [f"{title} ({msg_count} msgs)" for _, title, _, msg_count in chats]
+        return gr.update(choices=chat_choices)
+    
+    # Model selection logic
     def load_selected_model(selected_model):
         """Load the model when user changes selection"""
         result = load_model(selected_model)
@@ -611,24 +778,52 @@ with gr.Blocks(theme=theme, title="UVU AI Chatbot") as demo:
         info_text = f"**{selected_model}:** {info['size']} • {info['speed']} • {info['access']}\n\n{result}"
         return info_text
     
-    # Chat logic
-    def respond(message, history, username, selected_model):
+    # Chat logic with conversation management
+    def respond(message, history, username, selected_model, conversation_id):
         if not message.strip():
-            return "", history
+            return "", history, gr.update()
         
-        new_history = chat_response(message, history, username, selected_model)
-        return "", new_history
+        if not conversation_id:
+            # Create new conversation if none exists
+            conversation_id = create_new_chat(username)
+        
+        new_history = chat_response(message, history, username, selected_model, conversation_id)
+        
+        # Refresh sidebar to show updated title/count
+        chats = get_user_chats(username)
+        chat_choices = [f"{title} ({msg_count} msgs)" for _, title, _, msg_count in chats]
+        
+        return "", new_history, gr.update(choices=chat_choices)
     
     # Connect events
     login_btn.click(
         do_login,
         inputs=[login_username, login_password],
-        outputs=[login_group, chat_group, user_state, login_status, chatbot]
+        outputs=[login_group, chat_group, user_state, login_status, chatbot, current_conversation_id, chat_history_list]
     )
     
     logout_btn.click(
         do_logout,
-        outputs=[login_group, chat_group, user_state, login_status, chatbot]
+        outputs=[login_group, chat_group, user_state, login_status, chatbot, current_conversation_id, chat_history_list]
+    )
+    
+    # Sidebar chat management (ChatGPT-like)
+    new_chat_btn.click(
+        handle_new_chat,
+        inputs=user_state,
+        outputs=[chatbot, current_conversation_id, chat_history_list]
+    )
+    
+    chat_history_list.change(
+        handle_load_chat,
+        inputs=[user_state, chat_history_list],
+        outputs=[chatbot, current_conversation_id]
+    )
+    
+    refresh_chats_btn.click(
+        handle_refresh_chats,
+        inputs=user_state,
+        outputs=chat_history_list
     )
     
     # Model selector events
@@ -638,17 +833,17 @@ with gr.Blocks(theme=theme, title="UVU AI Chatbot") as demo:
         outputs=model_info
     )
     
-    # Chat events with model selection
+    # Chat events with conversation management
     submit.click(
         respond,
-        inputs=[msg, chatbot, user_state, model_selector],
-        outputs=[msg, chatbot]
+        inputs=[msg, chatbot, user_state, model_selector, current_conversation_id],
+        outputs=[msg, chatbot, chat_history_list]
     )
     
     msg.submit(
         respond,
-        inputs=[msg, chatbot, user_state, model_selector],
-        outputs=[msg, chatbot]
+        inputs=[msg, chatbot, user_state, model_selector, current_conversation_id],
+        outputs=[msg, chatbot, chat_history_list]
     )
 
 if __name__ == "__main__":
