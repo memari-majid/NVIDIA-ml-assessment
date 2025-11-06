@@ -243,6 +243,7 @@ class JetsonMLBenchmark:
             X, y = make_classification(
                 n_samples=n_samples,
                 n_features=n_features,
+                n_informative=max(10, n_features // 2),
                 n_classes=3,
                 random_state=42
             )

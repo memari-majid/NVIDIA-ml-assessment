@@ -1,0 +1,44 @@
+/home/majid/Downloads/jetson-ml-assessment/venv/lib/python3.12/site-packages/torch/cuda/__init__.py:283: UserWarning: 
+    Found GPU0 NVIDIA GB10 which is of cuda capability 12.1.
+    Minimum and Maximum cuda capability supported by this version of PyTorch is
+    (8.0) - (12.0)
+    
+  warnings.warn(
+/home/majid/Downloads/jetson-ml-assessment/venv/lib/python3.12/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/home/majid/Downloads/jetson-ml-assessment/venv/lib/python3.12/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=None`.
+  warnings.warn(msg)
+/home/majid/Downloads/jetson-ml-assessment/venv/lib/python3.12/site-packages/keras/src/layers/core/dense.py:95: UserWarning: Do not pass an `input_shape`/`input_dim` argument to a layer. When using Sequential models, prefer using an `Input(shape)` object as the first layer in the model instead.
+  super().__init__(activity_regularizer=activity_regularizer, **kwargs)
+/home/majid/Downloads/jetson-ml-assessment/venv/lib/python3.12/site-packages/keras/src/layers/convolutional/base_conv.py:113: UserWarning: Do not pass an `input_shape`/`input_dim` argument to a layer. When using Sequential models, prefer using an `Input(shape)` object as the first layer in the model instead.
+  super().__init__(activity_regularizer=activity_regularizer, **kwargs)
+Starting comprehensive ML benchmark on NVIDIA Jetson Orin Nano...
+System Info: {'timestamp': '2025-11-06T02:26:46.039168', 'python_version': '3.12.3 (main, Aug 14 2025, 17:47:21) [GCC 13.3.0]', 'pytorch_version': '2.9.0+cu129', 'tensorflow_version': '2.20.0', 'opencv_version': '4.12.0', 'cpu_count': 20, 'memory_total': 119.63694381713867, 'memory_available': 115.10932922363281, 'cuda_available': True, 'gpu_count': 1, 'gpu_name': 'NVIDIA GB10', 'cuda_version': '12.9'}
+Running PyTorch CPU benchmarks...
+  Testing resnet18...
+  Testing resnet50...
+  Testing mobilenet_v2...
+  Testing efficientnet_b0...
+Running TensorFlow CPU benchmarks...
+  Testing dense_64...
+  Testing dense_256...
+  Testing cnn_simple...
+Running OpenCV benchmarks...
+Running scikit-learn training benchmarks...
+  Testing small dataset (1000 samples, 20 features)...
+Traceback (most recent call last):
+  File "/home/majid/Downloads/jetson-ml-assessment/jetson_ml_benchmark.py", line 348, in <module>
+    results = benchmark.run_comprehensive_benchmark()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/majid/Downloads/jetson-ml-assessment/jetson_ml_benchmark.py", line 285, in run_comprehensive_benchmark
+    self.results['sklearn_training'] = self.benchmark_sklearn_training()
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/majid/Downloads/jetson-ml-assessment/jetson_ml_benchmark.py", line 243, in benchmark_sklearn_training
+    X, y = make_classification(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/majid/Downloads/jetson-ml-assessment/venv/lib/python3.12/site-packages/sklearn/utils/_param_validation.py", line 218, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/majid/Downloads/jetson-ml-assessment/venv/lib/python3.12/site-packages/sklearn/datasets/_samples_generator.py", line 241, in make_classification
+    raise ValueError(
+ValueError: n_classes(3) * n_clusters_per_class(2) must be smaller or equal 2**n_informative(2)=4
