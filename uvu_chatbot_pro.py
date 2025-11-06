@@ -32,6 +32,11 @@ from typing import List, Tuple, Optional
 import warnings
 warnings.filterwarnings('ignore')
 
+# Configure HuggingFace token
+HF_TOKEN = "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"
+os.environ['HF_TOKEN'] = HF_TOKEN
+os.environ['HUGGING_FACE_HUB_TOKEN'] = HF_TOKEN
+
 # ============================================================================
 # Configuration
 # ============================================================================
@@ -244,7 +249,7 @@ class ModelManager:
         
         try:
             # Load tokenizer
-            tokenizer = AutoTokenizer.from_pretrained(model_name)
+            tokenizer = AutoTokenizer.from_pretrained(model_name, token=HF_TOKEN)
             if tokenizer.pad_token is None:
                 tokenizer.pad_token = tokenizer.eos_token
             
@@ -253,7 +258,8 @@ class ModelManager:
                 model_name,
                 torch_dtype=torch.float16,
                 device_map="auto",
-                low_cpu_mem_usage=True
+                low_cpu_mem_usage=True,
+                token=HF_TOKEN
             )
             
             self.current_model = model
@@ -517,12 +523,13 @@ chatbot_app.model_manager.load_model("Llama-3.2-1B (Fastest)")
 # Gradio Interface
 # ============================================================================
 
-# Custom CSS
+# Custom CSS with UVU Brand Colors
+# UVU Primary Colors: Green #275D38, Black #000000, White #FFFFFF, Silver #A7A8AA
 custom_css = """
 .header {
     text-align: center;
     padding: 30px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #275D38 0%, #1a4428 100%);
     color: white;
     border-radius: 15px;
     margin-bottom: 20px;
@@ -533,7 +540,7 @@ custom_css = """
     padding: 20px;
     border-radius: 10px;
     margin: 15px 0;
-    border-left: 4px solid #667eea;
+    border-left: 4px solid #275D38;
 }
 .feature-grid {
     display: grid;
@@ -545,8 +552,22 @@ custom_css = """
     background: white;
     padding: 15px;
     border-radius: 8px;
-    border: 1px solid #e2e8f0;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    border: 1px solid #A7A8AA;
+    box-shadow: 0 2px 4px rgba(39,93,56,0.1);
+}
+.gradio-container {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.tab-nav button[aria-selected="true"] {
+    background-color: #275D38 !important;
+    color: white !important;
+}
+button.primary {
+    background: #275D38 !important;
+    border-color: #275D38 !important;
+}
+button.primary:hover {
+    background: #1a4428 !important;
 }
 """
 
@@ -560,13 +581,16 @@ with gr.Blocks(title="UVU GB10 AI Chatbot", theme=gr.themes.Soft(), css=custom_c
     # Header
     gr.HTML("""
         <div class="header">
-            <h1>🎓 UVU AI Chatbot</h1>
-            <h2>Powered by Dell Pro Max GB10</h2>
-            <p style="font-size: 16px; opacity: 0.95;">
+            <h1>🎓 Utah Valley University</h1>
+            <h2>AI Chatbot - Powered by Dell Pro Max GB10</h2>
+            <p style="font-size: 16px; opacity: 0.95; margin-top: 15px;">
                 NVIDIA Blackwell GPU | 13.4 TFLOPS | 119.6 GB Memory | 2,000+ tokens/sec
             </p>
             <p style="font-size: 14px; opacity: 0.9; margin-top: 10px;">
                 State-of-the-Art LLM Education Platform | 150-200 Concurrent Users
+            </p>
+            <p style="font-size: 12px; opacity: 0.85; margin-top: 10px; color: #A7A8AA;">
+                UVU School of Computing | AI/ML Research Initiative
             </p>
         </div>
     """)
