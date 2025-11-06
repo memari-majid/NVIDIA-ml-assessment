@@ -344,7 +344,7 @@ Q: UVU branding?
 A: ✅ APPLIED - Official UVU green colors (#275D38)
 
 Q: HuggingFace access?
-A: ✅ CONFIGURED - Token: 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
+A: ✅ CONFIGURED - Token set via HF_TOKEN environment variable
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 

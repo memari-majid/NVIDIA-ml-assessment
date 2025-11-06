@@ -32,10 +32,17 @@ from typing import List, Tuple, Optional
 import warnings
 warnings.filterwarnings('ignore')
 
-# Configure HuggingFace token
-HF_TOKEN = "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"
-os.environ['HF_TOKEN'] = HF_TOKEN
-os.environ['HUGGING_FACE_HUB_TOKEN'] = HF_TOKEN
+# Configure HuggingFace token from environment (NEVER commit tokens to git!)
+HF_TOKEN = os.environ.get('HF_TOKEN', None)
+
+if not HF_TOKEN:
+    print("⚠️  WARNING: HF_TOKEN environment variable not set")
+    print("  Some models may not be accessible without HuggingFace authentication")
+    print("  Set it with: export HF_TOKEN='your_huggingface_token'")
+    print("  Get token from: https://huggingface.co/settings/tokens")
+else:
+    os.environ['HUGGING_FACE_HUB_TOKEN'] = HF_TOKEN
+    print("✅ HuggingFace token configured from environment")
 
 # ============================================================================
 # Configuration
@@ -853,9 +860,7 @@ with gr.Blocks(title="UVU GB10 AI Chatbot", theme=gr.themes.Soft(), css=custom_c
     
     def handle_login(username, password):
         msg, success = chatbot_app.login(username, password)
-        if success:
-            return msg, gr.update(visible=True)
-        return msg, gr.update(visible=False)
+        return msg, success
     
     def handle_register(username, password, email):
         return chatbot_app.register(username, password, email)
@@ -885,7 +890,7 @@ with gr.Blocks(title="UVU GB10 AI Chatbot", theme=gr.themes.Soft(), css=custom_c
     login_btn.click(
         handle_login,
         inputs=[login_username, login_password],
-        outputs=[login_status, gr.State()]
+        outputs=[login_status, logged_in]
     )
     
     reg_btn.click(

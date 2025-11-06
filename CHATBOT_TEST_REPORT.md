@@ -173,7 +173,7 @@ Use ungated models that don't require auth (TinyLlama, GPT-2, etc.)
 
 **Setup Complete:**
 - ✅ ngrok installed: `/home/majid/.config/ngrok/ngrok`
-- ✅ Authtoken configured: `31yUo8DyENwWL0FcfZPHr1EWajT_7tkfLKJJR2ioPRqPXxz5k`
+- ✅ Authtoken configured: `[REDACTED - Set via NGROK_AUTHTOKEN env var]`
 - ✅ Custom domain active: `uvuchatbot.ngrok.app`
 - ✅ Tunnel established: HTTPS working
 - ✅ Port 7860 forwarded successfully

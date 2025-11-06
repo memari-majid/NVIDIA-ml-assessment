@@ -91,7 +91,30 @@ datasets/
 .coverage
 htmlcov/
 
+# Security - NEVER commit secrets!
+.env
+.env.local
+.env.production
+.env.development
+*.key
+*.pem
+*.crt
+secrets/
+credentials/
+*_token.txt
+*_secret.txt
+config/secrets.yml
+
+# Chatbot data (contains user information)
+chatbot_data/
+nohup.out
+
+# ngrok
+ngrok_output.log
+ngrok_tunnel.log
+
 # Exceptions - Keep these files
 !jetson_benchmark_results.json
 !jetson_test_suite_results.json
+!.env.example
 

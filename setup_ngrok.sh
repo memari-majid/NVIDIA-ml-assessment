@@ -7,8 +7,19 @@ echo "║              NGROK SETUP - UVU CHATBOT CUSTOM DOMAIN                  
 echo "║                                                                           ║"
 echo "╚═══════════════════════════════════════════════════════════════════════════╝"
 
-NGROK_TOKEN="31yUo8DyENwWL0FcfZPHr1EWajT_7tkfLKJJR2ioPRqPXxz5k"
+# Get ngrok token from environment variable (NEVER commit tokens to git!)
+NGROK_TOKEN="${NGROK_AUTHTOKEN:-}"
 CUSTOM_DOMAIN="uvuchatbot.ngrok.app"
+
+if [ -z "$NGROK_TOKEN" ]; then
+    echo "❌ ERROR: NGROK_AUTHTOKEN environment variable not set"
+    echo ""
+    echo "Please set your ngrok authtoken:"
+    echo "  export NGROK_AUTHTOKEN='your_token_here'"
+    echo ""
+    echo "Get your token from: https://dashboard.ngrok.com/get-started/your-authtoken"
+    exit 1
+fi
 
 echo ""
 echo "1️⃣  Installing ngrok..."

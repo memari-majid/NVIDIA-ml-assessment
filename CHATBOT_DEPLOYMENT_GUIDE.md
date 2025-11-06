@@ -173,7 +173,7 @@ All dependencies installed:
 **Prerequisites:**
 - ✅ ngrok account with paid plan (required for custom domains)
 - ✅ Domain configured in ngrok dashboard
-- ✅ Authtoken: `31yUo8DyENwWL0FcfZPHr1EWajT_7tkfLKJJR2ioPRqPXxz5k`
+- ✅ Authtoken: Set via environment variable (see setup instructions below)
 
 **Setup:**
 
