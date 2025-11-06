@@ -1,0 +1,144 @@
+
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                                                                           ║
+║    ⚠️  CRITICAL SECURITY WARNING - IMMEDIATE ACTION REQUIRED ⚠️         ║
+║                                                                           ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+🚨 API TOKENS WERE EXPOSED IN PREVIOUS COMMITS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+The following tokens were accidentally committed to the repository:
+
+1. HuggingFace API Token:  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
+2. ngrok Authtoken:        31yUo8DyENwWL0FcfZPHr1EWajT_7tkfLKJJR2ioPRqPXxz5k
+
+✅ THESE HAVE NOW BEEN REMOVED FROM ALL CODE AND DOCUMENTATION
+
+⚠️  HOWEVER, IF YOU ALREADY PUSHED TO GITHUB, THEY MAY BE IN GIT HISTORY!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔴 IMMEDIATE ACTIONS REQUIRED (DO THIS NOW!)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 1: REVOKE EXPOSED TOKENS (CRITICAL!)
+─────────────────────────────────────────────────────────────────────
+
+1. HuggingFace Token:
+   
+   a. Go to: https://huggingface.co/settings/tokens
+   b. Find token: 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
+   c. Click "Revoke" or "Delete"
+   d. Generate NEW token
+   e. Save new token securely
+
+2. ngrok Authtoken:
+   
+   a. Go to: https://dashboard.ngrok.com/get-started/your-authtoken
+   b. Find token: 31yUo8DyENwWL0FcfZPHr1EWajT_7tkfLKJJR2ioPRqPXxz5k
+   c. Click "Revoke" or "Regenerate"
+   d. Get NEW authtoken
+   e. Save new token securely
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 2: CONFIGURE NEW TOKENS (SECURELY)
+─────────────────────────────────────────────────────────────────────
+
+Option A: Use .env file
+
+  # Create .env file (this is in .gitignore, won't be committed)
+  cat > .env << 'EOF'
+  HF_TOKEN=your_new_hf_token
+  NGROK_AUTHTOKEN=your_new_ngrok_token
+  EOF
+  
+  # Load before running
+  source .env
+
+Option B: Export directly
+
+  export HF_TOKEN='your_new_hf_token'
+  export NGROK_AUTHTOKEN='your_new_ngrok_token'
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 3: CLEAN GIT HISTORY (If pushed to GitHub)
+─────────────────────────────────────────────────────────────────────
+
+If you already pushed commits with exposed tokens:
+
+Option A: Create Fresh Repository (Easiest)
+
+  # Backup current work
+  cp -r jetson-ml-assessment jetson-ml-assessment-backup
+  
+  # Create fresh repo (without history)
+  cd jetson-ml-assessment
+  rm -rf .git
+  git init
+  git add .
+  git commit -m "Initial commit (tokens removed)"
+  git remote add origin git@github.com:memari-majid/jetson-ml-assessment.git
+  git push -f origin main
+
+Option B: Use BFG Repo-Cleaner (Removes from history)
+
+  # Download BFG
+  wget https://repo1.maven.org/maven2/com/madgag/bfg/1.14.0/bfg-1.14.0.jar
+  
+  # Remove tokens from history
+  java -jar bfg-1.14.0.jar --replace-text passwords.txt
+  
+  # Force push cleaned history
+  git push -f origin main
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ WHAT WE FIXED IN THIS COMMIT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Removed HuggingFace token from uvu_chatbot_pro.py
+✅ Removed ngrok token from setup_ngrok.sh
+✅ Redacted tokens in all documentation files
+✅ Updated .gitignore to prevent future exposures
+✅ Fixed State variable bug (proper login tracking)
+✅ Created ENV_SETUP_INSTRUCTIONS.md
+✅ Created SECURITY_GUIDE.md
+✅ Code now uses environment variables
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 CHECKLIST
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Before pushing to GitHub:
+
+  [ ] Revoke old HuggingFace token
+  [ ] Generate new HuggingFace token
+  [ ] Revoke old ngrok token
+  [ ] Generate new ngrok token
+  [ ] Create .env file with new tokens
+  [ ] Test chatbot works with new tokens
+  [ ] Verify .env is NOT in git status
+  [ ] Push to GitHub
+
+After pushing:
+
+  [ ] Verify no tokens in latest commit (check GitHub)
+  [ ] Monitor tokens for unauthorized use
+  [ ] Consider enabling 2FA on accounts
+  [ ] Set up token rotation schedule
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️  REMEMBER: The exposed tokens are still in your git history if you pushed!
+   You MUST revoke them even though they're removed from current code.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📖 For detailed instructions, see:
+   - ENV_SETUP_INSTRUCTIONS.md (how to set up tokens securely)
+   - SECURITY_GUIDE.md (security best practices)
+
