@@ -617,68 +617,20 @@ with gr.Blocks(theme=theme, title="UVU AI Chatbot") as demo:
             """)
             logout_btn = gr.Button("Sign Out", size="sm", scale=0)
         
-        # Main content with sidebar (ChatGPT style)
+        # Current conversation ID (hidden state)
+        current_conversation_id = gr.State(None)
+        
+        # Simple top bar with New Chat
         with gr.Row():
-            # Sidebar - Chat history (ChatGPT-like)
-            with gr.Column(scale=2, min_width=250):
-                gr.HTML("""
-                <div style="padding: 15px 10px; background: #f7f9f8; border-radius: 8px; margin-bottom: 10px;">
-                    <h3 style="margin: 0 0 5px 0; font-size: 0.95em; color: #275D38;">💬 Your Chats</h3>
-                </div>
-                """)
-                
-                new_chat_btn = gr.Button(
-                    "➕ New Chat",
-                    variant="primary",
-                    size="sm",
-                    elem_id="new-chat-btn"
-                )
-                
-                # Chat history list
-                chat_history_list = gr.Radio(
-                    choices=[],
-                    label="Recent Conversations",
-                    interactive=True,
-                    elem_id="chat-list"
-                )
-                
-                refresh_chats_btn = gr.Button("🔄 Refresh", size="sm", variant="secondary")
-                
-                gr.HTML("""
-                <div style="margin-top: 15px; padding: 12px; background: #f0f7f4; border-radius: 6px; font-size: 0.85em;">
-                    <p style="margin: 0; color: #275D38; font-weight: 600;">💡 Tip</p>
-                    <p style="margin: 5px 0 0 0; color: #555;">Click "New Chat" to start fresh, or select a previous conversation to continue.</p>
-                </div>
-                """)
-            
-            # Main chat area
             with gr.Column(scale=10):
-                # Current conversation ID (hidden)
-                current_conversation_id = gr.State(None)
-        
-        # Model selector - compact and clean
-        with gr.Row():
-            with gr.Column(scale=2):
                 pass
-            with gr.Column(scale=8):
-                model_selector = gr.Dropdown(
-                    choices=list(AVAILABLE_MODELS.keys()),
-                    value=DEFAULT_MODEL,
-                    label="🤖 AI Model",
-                    info="Choose your AI assistant",
-                    container=True,
-                    scale=1
-                )
-                model_info = gr.Markdown(f"""
-                **{DEFAULT_MODEL}:** {AVAILABLE_MODELS[DEFAULT_MODEL]['size']} • {AVAILABLE_MODELS[DEFAULT_MODEL]['speed']} • {AVAILABLE_MODELS[DEFAULT_MODEL]['access']}
-                """, elem_classes="model-info")
             with gr.Column(scale=2):
-                pass
+                new_chat_btn = gr.Button("➕ New Chat", variant="secondary", size="sm")
         
-        # Clean chat interface (ChatGPT style)
+        # Clean chat interface (ChatGPT style) - PROMINENT
         chatbot = gr.Chatbot(
             value=[],
-            height=450,
+            height=550,
             show_label=False,
             container=False,
             bubble_full_width=False,
@@ -686,18 +638,49 @@ with gr.Blocks(theme=theme, title="UVU AI Chatbot") as demo:
             show_copy_button=True,
             render_markdown=True,
             latex_delimiters=[{"left": "$$", "right": "$$", "display": True}],
+            elem_id="main-chat"
         )
         
-        # Simple input (ChatGPT style)
+        # PROMINENT INPUT AREA - Easy to find!
+        gr.HTML("""
+        <div style="text-align: center; margin: 20px 0 10px 0;">
+            <p style="color: #6b7280; font-size: 0.9em;">💬 Type your message below</p>
+        </div>
+        """)
+        
         with gr.Row():
             msg = gr.Textbox(
                 show_label=False,
-                placeholder="Message UVU AI...",
+                placeholder="Type your message here... (Press Enter or click →)",
                 container=False,
                 scale=10,
-                lines=1
+                lines=2,
+                elem_id="message-input",
+                autofocus=True
             )
-            submit = gr.Button("↑", variant="primary", scale=0, size="lg")
+            submit = gr.Button("→", variant="primary", scale=1, size="lg", elem_id="send-btn")
+        
+        # Collapsible advanced options (hidden by default)
+        with gr.Accordion("⚙️ Advanced Options", open=False):
+            with gr.Row():
+                model_selector = gr.Dropdown(
+                    choices=list(AVAILABLE_MODELS.keys()),
+                    value=DEFAULT_MODEL,
+                    label="🤖 AI Model",
+                    info="Select different AI model",
+                    scale=2
+                )
+                chat_history_list = gr.Dropdown(
+                    choices=[],
+                    label="📜 Previous Chats",
+                    info="Load a previous conversation",
+                    interactive=True,
+                    scale=2
+                )
+            
+            model_info = gr.Markdown(f"""
+            **Current:** {DEFAULT_MODEL} - {AVAILABLE_MODELS[DEFAULT_MODEL]['size']} • {AVAILABLE_MODELS[DEFAULT_MODEL]['speed']}
+            """, elem_classes="model-info")
         
         # Minimal footer
         gr.HTML("""
